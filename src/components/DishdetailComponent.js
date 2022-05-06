@@ -1,76 +1,193 @@
-import React from 'react'
-import { Card, CardBody, CardImg, CardText, CardTitle,Breadcrumb,BreadcrumbItem } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import {
+  Card,
+  CardBody,
+  CardImg,
+  CardText,
+  CardTitle,
+  Breadcrumb,
+  BreadcrumbItem,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+} from "reactstrap";
+import { Link } from "react-router-dom";
 
-  const RenderDish=({dish})=>{
-          return(
-            <div className="col-12 col-md-5 m-1">
-            <Card>
-              <CardImg top src={dish.image} alt={dish.name} />
-              <CardBody>
-            <CardTitle>{dish.name}</CardTitle>
-            <CardText>{dish.description}</CardText>
-              </CardBody>
-            </Card>
-            </div>
-          );
-      };
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !val || val.length <= len;
+const minLength = (len) => (val) => val && val.length >= len;
+class CommentForm extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.state = {
+      isModalOpen: false,
+      username: "",
+      rating: "",
+      comment: "",
+      touched: {
+        username: false,
+        rating: false,
+        comment: false,
+      },
+    };
+  }
+  toggleModal() {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen,
+    });
+  }
+  handleSubmit(event) {
+    this.toggleModal();
+    alert(
+      "Rating: " +
+        this.rating.value +
+        " Username: " +
+        this.username.value +
+        " Comment: " +
+        this.comment.value
+    );
+    event.preventDefault();
+  }
 
-  const RenderComments=({comments})=> {
-        if(comments != null){
-            return(
-                <div className='col-12 col-md-5 m-1'>
-                  <h4>Comments</h4>
-                  <ul className='list-unstyled'>
-                    {comments.map((comment)=>{
-                      return(
-                        <li key={comment.id}>
-                          <p>{comment.comment}</p>
-                          <p>--{comment.author},{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-            )
-                  }else
-        return(
-        <div></div>
-        );
-                  }
-
-const DishDetail=(props)=>{
-  if (props.dish != null)
-  return (
-    <div className="container">
-    <div className="row">
-        <Breadcrumb>
-
-            <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-        </Breadcrumb>
-        <div className="col-12">
-            <h3>{props.dish.name}</h3>
-            <hr />
-        </div>                
-    </div>
-    <div className="row">
-        <div className="col-12 col-md-5 m-1">
-            <RenderDish dish={props.dish} />
-        </div>
-        <div className="col-12 col-md-5 m-1">
-            <RenderComments comments={props.comments} />
-        </div>
-    </div>
-    </div>
-);
-  else
-  return(
-    <div></div>
-  )
+  render() {
+    return (
+      <div>
+        <Button outline onClick={this.toggleModal}>
+          <span className="fa fa-sign-in fa-lg"></span> Submit Comment
+        </Button>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.handleLogin}>
+              <FormGroup>
+                <Label htmlFor="rating">Rating</Label>
+                <Input
+                  type="select"
+                  id="rating"
+                  name="rating"
+                  className="form-control"
+                  innerRef={(input) => (this.rating = input)}
+                >
+                  <option value={"1"}>1</option>
+                  <option value={"2"}>2</option>
+                  <option value={"3"}>3</option>
+                  <option value={"4"}>4</option>
+                  <option value={"5"}>5</option>
+                </Input>
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="username">Your Name</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  className="form-control"
+                  name="username"
+                  validators={{
+                    required,
+                    minLength: minLength(3),
+                    maxLength: maxLength(15),
+                  }}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="comment">Comment :</Label>
+                <Input
+                  type="textarea"
+                  id="comment"
+                  name="comment"
+                  className="form-control"
+                  innerRef={(input) => (this.comment = input)}
+                />
+              </FormGroup>
+              <Button type="submit" value="submit" color="primary">
+                Submit
+              </Button>
+            </Form>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
+  }
 }
 
+const RenderDish = ({ dish }) => {
+  return (
+    <div className="col-12 col-md-5 m-1">
+      <Card>
+        <CardImg top src={dish.image} alt={dish.name} />
+        <CardBody>
+          <CardTitle>{dish.name}</CardTitle>
+          <CardText>{dish.description}</CardText>
+        </CardBody>
+      </Card>
+    </div>
+  );
+};
 
+const RenderComments = ({ comments }) => {
+  if (comments != null) {
+    return (
+      <div className="col-12 col-md-5 m-1">
+        <h4>Comments</h4>
+        <ul className="list-unstyled">
+          {comments.map((comment) => {
+            return (
+              <li key={comment.id}>
+                <p>{comment.comment}</p>
+                <p>
+                  --{comment.author},
+                  {new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                  }).format(new Date(Date.parse(comment.date)))}
+                </p>
+              </li>
+            );
+          })}
+          <li>
+            <CommentForm />
+          </li>
+        </ul>
+      </div>
+    );
+  } else return <div></div>;
+};
 
+const DishDetail = (props) => {
+  if (props.dish != null)
+    return (
+      <div className="container">
+        <div className="row">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to="/menu">Menu</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+          </Breadcrumb>
+          <div className="col-12">
+            <h3>{props.dish.name}</h3>
+            <hr />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 col-md-5 m-1">
+            <RenderDish dish={props.dish} />
+          </div>
+          <div className="col-12 col-md-5 m-1">
+            <RenderComments comments={props.comments} />
+          </div>
+        </div>
+      </div>
+    );
+  else return <div></div>;
+};
 
-    export default DishDetail;
+export default DishDetail;
