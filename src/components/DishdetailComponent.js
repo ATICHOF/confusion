@@ -47,7 +47,7 @@ class CommentForm extends Component {
   }
   handleSubmit(values) {
     this.toggleModal();
-    this.props.addComment(
+    this.props.postComment(
       this.props.dishId,
       values.rating,
       values.author,
@@ -82,12 +82,12 @@ class CommentForm extends Component {
                 </Input>
               </FormGroup>
               <FormGroup>
-                <Label htmlFor="username">Your Name</Label>
+                <Label htmlFor="author">Your Name</Label>
                 <Input
                   type="text"
-                  id="username"
+                  id="author"
                   className="form-control"
-                  name="username"
+                  name="author"
                   validators={{
                     required,
                     minLength: minLength(3),
@@ -130,7 +130,7 @@ const RenderDish = ({ dish }) => {
   );
 };
 
-const RenderComments = ({ comments, addComment, dishId }) => {
+const RenderComments = ({ comments, postComment, dishId }) => {
   if (comments != null) {
     return (
       <div className="col-12 col-md-5 m-1">
@@ -152,7 +152,7 @@ const RenderComments = ({ comments, addComment, dishId }) => {
             );
           })}
           <li>
-            <CommentForm dishId={dishId} addComment={addComment} />
+            <CommentForm dishId={dishId} postComment={postComment} />
           </li>
         </ul>
       </div>
@@ -199,7 +199,7 @@ const DishDetail = (props) => {
           <div className="col-12 col-md-5 m-1">
             <RenderComments
               comments={props.comments}
-              addComment={props.addComment}
+              postComment={props.postComment}
               dishId={props.dish.id}
             />
           </div>
