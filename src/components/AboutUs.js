@@ -14,7 +14,11 @@ function About(props) {
   const leaders = props.leaders.leaders.map((leader) => {
     return (
       <div key={leader.id} className="col-12 col-md-5 m-1">
-        <RenderLeader item={leader} />
+        <RenderLeader
+          leader={leader}
+          isLoading={leader.isLoading}
+          errMess={leader.errMess}
+        />
       </div>
     );
   });
