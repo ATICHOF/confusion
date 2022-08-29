@@ -8,7 +8,7 @@ import {
   CardSubtitle,
 } from "reactstrap";
 
-const RenderLeader = (item) => {
+export const RenderLeader = (item) => {
   return (
     <Card>
       <CardImg src={item.image} alt={item.name} />
@@ -22,5 +22,3 @@ const RenderLeader = (item) => {
     </Card>
   );
 };
-
-export default RenderLeader;

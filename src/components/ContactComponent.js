@@ -1,7 +1,9 @@
+/* eslint-disable react/jsx-pascal-case */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
 import { Breadcrumb, BreadcrumbItem, Row, Col, Label } from "reactstrap";
-import { Control, Form, Errors, actions } from "react-redux-form";
+import { Control, Form, Errors } from "react-redux-form";
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
@@ -32,9 +34,18 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
-    console.log("Current State is: " + JSON.stringify(values));
-    alert("Current State is: " + JSON.stringify(values));
+    console.log("Thank you for your feedback ! " + JSON.stringify(values));
+    alert("Thank you for your feedback ! " + JSON.stringify(values));
     this.props.resetFeedbackForm();
+    this.props.postFeedback(
+      values.firstname,
+      values.lastname,
+      values.telnum,
+      values.email,
+      values.agree,
+      values.contactType,
+      values.message
+    );
     // event.preventDefault();
   }
 
@@ -222,6 +233,53 @@ class Contact extends Component {
                       validEmail: "Invalid Email Address",
                     }}
                   />
+                </Col>
+              </Row>
+              <Row class="form-group">
+                <Col class="col-md-6 offset-md-2">
+                  <Control.checkbox
+                    model=".agree"
+                    id="agree"
+                    name="agree"
+                    className="form-check"
+                    class="offset-md-2"
+                  />
+                  <Label htmlFor="contactType" class="form-check-label">
+                    <strong>May we contact you?</strong>
+                  </Label>
+                </Col>
+                <Col md={3}>
+                  <Control.select
+                    model=".contactType"
+                    id="contactType"
+                    name="contactType"
+                    className="form-control"
+                  >
+                    <option value="tel">Tel.</option>
+                    <option value="email">Email</option>
+                  </Control.select>
+                </Col>
+              </Row>
+              <Row class="form-group">
+                <Label htmlFor="feedback" md={2} class="from-label">
+                  Your Feedback
+                </Label>
+                <Col md={10}>
+                  <Control.textarea
+                    model=".message"
+                    id="message"
+                    name="message"
+                    className="form-control"
+                    rows="12"
+                  />
+                </Col>
+              </Row>
+              <br />
+              <Row class="form-group">
+                <Col class="col-md-10 offset-md-2">
+                  <button type="submit" class="btn btn-primary">
+                    Send Feedback
+                  </button>
                 </Col>
               </Row>
             </Form>

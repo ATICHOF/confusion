@@ -21,9 +21,6 @@ function Footer(props) {
               <li>
                 <Link to="/contactus">Contact Us</Link>
               </li>
-              <li>
-                <a href="contactus.html">Contact</a>
-              </li>
             </ul>
           </div>
           <div className="col-7 col-sm-5">
